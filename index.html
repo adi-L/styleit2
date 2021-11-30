@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>styleit - Development</title>
+</head>
+<style>
+  #textEditor {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, 0);
+    background: #fff;
+  }
+
+  #root {
+    margin-top: 140px;
+
+  }
+
+  .style-it-col {
+    width: 100%;
+  }
+
+  #editor {
+    min-height: 100px;
+    margin-top: 300px;
+    ;
+    background: rgb(240, 238, 238);
+  }
+
+  .noselect {
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Safari */
+    -khtml-user-select: none;
+    /* Konqueror HTML */
+    -moz-user-select: none;
+    /* Old versions of Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    user-select: none;
+    /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+  }
+</style>
+
+<body>
+  <div id="root">
+    <div id="textEditor">
+      <script>
+
+      </script>
+      <button onclick="exec()">click</button>
+    </div>
+    <div class="noselect" translate="no" spellcheck="false" contenteditable="true" id="editor">
+      <h3>
+        Create your own professional Text editor, exactly the way you want.
+
+      </h3>
+
+      <p>
+        StyleIt.js is A completely customizable for building rich text editors
+        in the browser. its a simple editor API built for Developers.
+      </p>
+      <hr />
+
+    </div>
+  </div>
+
+  </div>
+  <script>
+    (function () {
+      window.addEventListener('DOMContentLoaded', (event) => {
+
+        const root = document.querySelector('#editor');
+      
+        const styleIt = window.styleIt = new Styleit(root);
+        window.exec = () => {
+          styleIt.execCommand({
+            nodeName:"b",
+            scheme:"toggle",
+            splitDom:["b","strong","[style*=font-weight]"]
+          });
+        }
+      });
+    })();
+  </script>
+</body>
+
+</html>
