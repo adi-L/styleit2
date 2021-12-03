@@ -1,23 +1,30 @@
 import unWrap from "./unwrap";
 import getCleanText from "./getCleanText";
-const mergeSiblings = (node: Element) => {
-    if(!node) return;
-    let child = node.childNodes.length > 0 ? node.childNodes[0] : null;
-    while(child) {
-        debugger
+const mergeSiblings = (node: Node) => {
+    if (!node) return;
+    let child: Node | null = node;
+    while (child) {
         const next = child.nextSibling;
-        if (child.nodeType === Node.TEXT_NODE && typeof child.textContent ==="string" && !getCleanText(child.textContent)) {
+        if (child.nodeType === Node.TEXT_NODE && typeof child.textContent === "string" && !getCleanText(child.textContent)) {
             const removedChild = child;
             child = child.previousSibling;
-            removedChild.remove();
+            removedChild.parentElement?.removeChild(removedChild);
         } else if (next && child.nodeType === Node.ELEMENT_NODE && next.nodeType === Node.ELEMENT_NODE && next.nodeName === child.nodeName) {
             child.appendChild(next);
             unWrap(next);
             child = child.nextSibling;
-        }else {
+        } else if (next && next.nodeType === 1 && typeof next.textContent === "string" && !getCleanText(next.textContent) && !(next as HTMLElement).getAttribute("data-selection-flag")) {
+            const tempElHolder: Node = next;
+            child = tempElHolder.nextSibling;
+            tempElHolder.parentNode?.removeChild(tempElHolder);
+        } else if (next && next.nodeType === 1) {
+            const tempElHolder: Node = next;
+            mergeSiblings(next);
+            child = tempElHolder.nextSibling;
+        } else {
             child = child.nextSibling;
         }
-     
+
     }
 
 }
