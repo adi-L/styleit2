@@ -1,32 +1,8 @@
 import unWrap from "./unwrap";
 import { getTextNodes } from "./getRangeTextNodes";
-function createRangeFromNode(node: Node) {
-    let range = node.ownerDocument?.createRange();
-    if(!range) {
-        return;
-    }
-    try {
-        range.selectNode(node);
-    } catch (e) {
-        range.selectNodeContents(node);
-    }
-    return range;
-}
-function rangeIntersectsNode(range: Range, node: Node) {
-
-    if (range.intersectsNode) {
-        return range.intersectsNode(node);
-    } else {
-        const rangeFromNode = createRangeFromNode(node);
-        if(!rangeFromNode) return;
-        return range.compareBoundaryPoints(Range.END_TO_START,rangeFromNode ) === -1 &&
-            range.compareBoundaryPoints(Range.START_TO_END, rangeFromNode) === 1;
-    }
-}
-
-
-export default function createWrapperFunction(wrapperEl: Element, range: Range, onWrapNode: Function, onBeforeWrapNode:Function):Node[] {
-    const nodesAtSelection:Node[] = [];
+import { rangeIntersectsNode } from "./rangeIntersectsNode";
+export default function createWrapperFunction(wrapperEl: Element, range: Range, onWrapNode?: Function): Node[] {
+    const nodesAtSelection: Node[] = [];
     let startNode = range.startContainer,
         endNode = range.endContainer,
         startOffset = range.startOffset,
@@ -36,16 +12,17 @@ export default function createWrapperFunction(wrapperEl: Element, range: Range, 
     let index = 0;
     nodes.map((node) => {
         if (rangeIntersectsNode(range, node) && typeof node.textContent === "string" && node.textContent.length > 0) {
-            if(typeof onBeforeWrapNode === "function"){
-                onBeforeWrapNode(node, index);
-            }
             const wrappedNode = wrapNode(node);
-            onWrapNode(wrappedNode, index);
-            nodesAtSelection.push(wrappedNode)
+            if (typeof onWrapNode === "function") {
+                onWrapNode(wrappedNode, index);
+            }
+            if (range.intersectsNode(wrappedNode)) {
+                nodesAtSelection.push(wrappedNode)
+            }
             index++;
         }
     })
-    function wrapNode(node: Node) {
+    function wrapNode(node: Node): Node {
         let currentRange: Range = document.createRange(),
             currentWrapper: Node = wrapperEl.cloneNode();
 
@@ -66,11 +43,6 @@ export default function createWrapperFunction(wrapperEl: Element, range: Range, 
             const elementToUnwrap = parentEl;
             parentEl = parentEl.parentElement;
             unWrap(elementToUnwrap);
-        }
-        let nextSibling = (parentEl as Element).nextSibling;
-        while(nextSibling && nextSibling.nodeType === 1) {
-            console.log(nextSibling);
-            nextSibling = nextSibling.nextSibling;
         }
         return parentEl;
     };
