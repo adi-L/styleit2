@@ -1,8 +1,8 @@
 import * as CSS from 'csstype';
 export default interface Command {
-    nodeName: String;
+    nodeName: string;
     scheme: string;
     style?:CSS.Properties;
     classList?: string[];   
-    splitDom?: String[] ;
+    splitDom?: string[] ;
 }
