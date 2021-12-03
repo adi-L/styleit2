@@ -5,6 +5,10 @@ interface ReturnResult {
 export default function setSelectionFlags(): ReturnResult | null {
     const selection: Selection | null = window.getSelection();
     if (!selection) return null;
+    console.log(selection.rangeCount)
+    if(selection.rangeCount < 0){
+        return null;
+    }
     const selectedRange: Range = selection.getRangeAt(0);
     const startFlag: Element = document.createElement("span");
     startFlag.setAttribute("data-selection-flag", "true");
