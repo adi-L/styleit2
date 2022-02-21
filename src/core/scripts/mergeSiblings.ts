@@ -1,5 +1,6 @@
 import unWrap from "./unwrap";
 import getCleanText from "./getCleanText";
+const mergedTags = ["SPAN","B","STRONG","BOLD","U","EM","I","ITALIC","S","SUB","SUP","STRIKE","DEL","SUB","SUP","FONT","SPAN","B","STRONG","BOLD","U","EM","I","ITALIC","S","SUB","SUP","STRIKE","DEL","SUB","SUP","FONT"];
 const mergeSiblings = (node: Node) => {
     if (!node) return;
     let child: Node | null = node;
@@ -9,7 +10,7 @@ const mergeSiblings = (node: Node) => {
             const removedChild = child;
             child = child.previousSibling;
             removedChild.parentElement?.removeChild(removedChild);
-        } else if (next && child.nodeType === Node.ELEMENT_NODE && next.nodeType === Node.ELEMENT_NODE && next.nodeName === child.nodeName) {
+        } else if (next && child.nodeType === Node.ELEMENT_NODE && next.nodeType === Node.ELEMENT_NODE && next.nodeName === child.nodeName && mergedTags.includes(child.nodeName)) {
             child.appendChild(next);
             unWrap(next);
             child = child.nextSibling;

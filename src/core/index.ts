@@ -1,6 +1,7 @@
 import Plugin from './interfaces/Plugins';
 import Command from './interfaces/Command';
 import wrapSelection from './selection'
+
 export default class Core {
   target:HTMLElement;
   plugins:Plugin;
