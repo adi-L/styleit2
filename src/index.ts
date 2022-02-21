@@ -6,10 +6,10 @@ import "./core/prototype"
 
 export default class StyleIt {
   core: Core;
-  constructor(target: HTMLElement, plugins: Plugins={}) {
+  constructor(target: HTMLElement, plugins: Plugins = {}) {
     this.core = new Core(target, plugins);
   }
-  execCommand(command:Command) {
+  execCommand(command: Command) {
     this.core.execCommand(command);
   }
   destroy() {

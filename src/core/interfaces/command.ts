@@ -4,5 +4,5 @@ export default interface Command {
     scheme: string;
     style?:CSS.Properties;
     classList?: string[];   
-    splitDom?: string[] ;
+    splitDom?: string[];
 }

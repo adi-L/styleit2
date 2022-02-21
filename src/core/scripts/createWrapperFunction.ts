@@ -1,7 +1,7 @@
 import unWrap from "./unwrap";
 import { getTextNodes } from "./getRangeTextNodes";
 import { rangeIntersectsNode } from "./rangeIntersectsNode";
-export default function createWrapperFunction(wrapperEl: Element, range: Range, onWrapNode?: Function): Node[] {
+export default function createWrapperFunction(wrapperEl: Element, range: Range): Node[] {
     const nodesAtSelection: Node[] = [];
     let startNode = range.startContainer,
         endNode = range.endContainer,
@@ -9,17 +9,12 @@ export default function createWrapperFunction(wrapperEl: Element, range: Range, 
         endOffset = range.endOffset;
     let container = range.commonAncestorContainer,
         nodes = getTextNodes(container.parentNode || container);
-    let index = 0;
     nodes.map((node) => {
         if (rangeIntersectsNode(range, node) && typeof node.textContent === "string" && node.textContent.length > 0) {
             const wrappedNode = wrapNode(node);
-            if (typeof onWrapNode === "function") {
-                onWrapNode(wrappedNode, index);
-            }
             if (range.intersectsNode(wrappedNode)) {
                 nodesAtSelection.push(wrappedNode)
             }
-            index++;
         }
     })
     function wrapNode(node: Node): Node {
